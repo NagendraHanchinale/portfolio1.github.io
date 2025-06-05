@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+  <style>
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    .scrollbar-hide {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;     /* Firefox */
+    }
+
+    /* Custom gradient animation */
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradient-shift 15s ease infinite;
+    }
+
+    /* Enhanced Project Card Styles */
+    .project-card {
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(139, 69, 19, 0.1), rgba(255, 105, 180, 0.1), rgba(30, 144, 255, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .project-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(139, 69, 19, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Enhanced glass morphism */
+    .glass-enhanced {
+      backdrop-filter: blur(20px) saturate(200%);
+      -webkit-backdrop-filter: blur(20px) saturate(200%);
+      background: rgba(30, 30, 30, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Project image hover effects */
+    .project-image {
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(255,255,255,0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .project-card:hover .project-image::after {
+      opacity: 1;
+    }
+
+    .project-card:hover .project-image img {
+      transform: scale(1.1);
+    }
+
+    /* Enhanced text animations */
+    .project-title {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #8b4513, #ff69b4, #1e90ff);
+      transition: width 0.3s ease;
+    }
+
+    .project-card:hover .project-title::after {
+      width: 100%;
+    }
+
+    /* Floating animation for cards */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .project-card:nth-child(1) {
+      animation: float 6s ease-in-out infinite;
+      animation-delay: 0s;
+    }
+
+    .project-card:nth-child(2) {
+      animation: float 6s ease-in-out infinite;
+      animation-delay: 2s;
+    }
+
+    .project-card:nth-child(3) {
+      animation: float 6s ease-in-out infinite;
+      animation-delay: 4s;
+    }
+
+    /* Enhanced section header */
+    .section-header {
+      position: relative;
+      margin-bottom: 3rem;
+    }
+
+    .section-header::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(139, 69, 19, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    /* Glowing text effect for main title */
+    .glow-text {
+      text-shadow: 
+        0 0 5px rgba(139, 69, 19, 0.5),
+        0 0 10px rgba(255, 105, 180, 0.3),
+        0 0 15px rgba(30, 144, 255, 0.2);
+    }
+
+    /* Enhanced project grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      perspective: 1000px;
+    }
+
+    /* Glass morphism effect */
+    .glass {
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background-color: rgba(30, 30, 30, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.125);
+    }
+
+    /* Enhanced project description */
+    .project-description {
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+
+    .project-card:hover .project-description {
+      opacity: 1;
+    }
+
+    /* Improved responsive design */
+    @media (max-width: 768px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .project-card:hover {
+        transform: translateY(-8px) scale(1.01);
+      }
+    }
+
+  </style>
+</head>
+<body class="bg-[#111112] text-white min-h-screen scrollbar-hide">
+
+  <!-- Header -->
+<header class="sticky top-0 z-50 w-full py-4 px-4 md:px-8 flex items-center justify-between shadow-2xl rounded-md bg-[#1e1e1e]/50 backdrop-blur-md backdrop-saturate-150">
+
+  <!-- Logo Section -->
+  <div class="flex items-center rounded-md">
+    <img src="../profile.png" alt="Logo" class="w-10 h-8 rounded-full mr-4" />
+    <h1 class="text-xl md:text-2xl font-semibold text-white">Ride Handling Portfolio</h1>
+  </div>
+
+  <!-- Desktop Navigation -->
+  <nav class="hidden md:flex gap-6 text-white font-medium mr-[300px]">
+    <a href="../index.html#functionalities" class="hover:text-purple-400 transition">Home</a>
+    <a href="../Pages/Project1.html" class="hover:text-purple-400 transition">Projects</a>
+    <a href="../Pages/About.html" class="hover:text-purple-400 transition">About</a>
+    <a href="../Pages/Resume.html" class="hover:text-purple-400 transition">Resume</a>
+    <a href="../Pages/Contact.html" class="hover:text-purple-400 transition">Contact</a>
+  </nav>
+
+  <!-- Mobile Menu Button -->
+  <div class="md:hidden relative">
+    <button id="menuToggle" class="p-2 rounded-lg bg-[#2c2c31] hover:bg-[#3c3c41] transition-colors">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileMenu" class="hidden absolute right-0 mt-2 w-48 bg-[#2c2c31] text-white rounded-lg shadow-lg py-2 z-50">
+      <a href="../index.html#functionalities" class="block px-4 py-2 hover:bg-[#3c3c41]">Home</a>
+      <a href="../Pages/Project1.html" class="block px-4 py-2 hover:bg-[#3c3c41]">Projects</a>
+      <a href="../Pages/About.html" class="block px-4 py-2 hover:bg-[#3c3c41]">About</a>
+      <a href="../Pages/Resume.html" class="block px-4 py-2 hover:bg-[#3c3c41]">Resume</a>
+      <a href="../Pages/Contact.html" class="block px-4 py-2 hover:bg-[#3c3c41]">Contact</a>
+      
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Container -->
+  <div class="container mx-auto px-4 py-8 max-w-7xl bg-[#111112] scrollbar-hide">
+    <div class="flex flex-col lg:flex-row gap-8 scrollbar-hide">
+
+      <!-- Left Sidebar - Profile -->
+<div class="md:w-[300px] w-[90%] bg-[#1e1e1e] text-white p-6 rounded-2xl shadow-xl mx-auto relative border border-gray-700 backdrop-blur-md md:h-[60vh]">
+
+  <!-- Toggle Button for Small Screens -->
+  <!-- <button 
+    @click="open = !open"
+    class="sm:hidden absolute top-2 right-2 z-20 text-white"
+  >
+    <svg :class="{'rotate-180': open}" class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button> -->
+
+  <!-- Glowing Background Circle -->
+  <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-2xl opacity-20 z-0"></div>
+
+  <!-- Card Content -->
+  <div x-show="open" x-transition class="relative z-10 mt-4 sm:mt-0">
+    <div class="relative w-28 h-28 mx-auto">
+      <img src="../profile.png" alt="Profile" class="w-full h-full rounded-full border-4 border-gray-500 shadow-lg ring-4 ring-[#313135]" />
+    </div>
+
+    <h2 class="text-2xl font-bold mt-4 tracking-wide text-center">Nagendra B Hanchinale</h2>
+    <p class="text-sm italic text-gray-400 text-center mt-1">"Code like art, build like an architect."</p>
+
+    <div class="mt-6 space-y-3 text-sm text-gray-300 text-center">
+      <p class="flex justify-center items-center gap-2 text-gray-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21C12 21 5 13.5 5 8.5A7 7 0 0 1 19 8.5c0 5-7 12.5-7 12.5z"></path>
+          <circle cx="12" cy="8.5" r="2.5" fill="currentColor"></circle>
+        </svg>
+        Hubli, India
+      </p>
+    </div>
+
+<div class="mt-6 flex justify-center gap-4">
+  <!-- LinkedIn -->
+  <a href="https://www.linkedin.com/in/nagendra-hanchinale-663291258/" target="_blank" class="bg-[#28282b] p-2 rounded-full hover:bg-blue-600 transition duration-300" aria-label="LinkedIn">
+    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.48 8.2H4.5V24H.48V8.2zM8.75 8.2H12.5v2.3h.05c.52-.98 1.8-2 3.7-2 3.96 0 4.7 2.6 4.7 6V24h-4.02v-7.7c0-1.9-.03-4.3-2.65-4.3-2.65 0-3.05 2.07-3.05 4.2V24H8.75V8.2z"/>
+    </svg>
+  </a>
+
+  <!-- Twitter -->
+<a href="https://x.com/NHanchinale" target="_blank" class="bg-[#28282b] p-2 rounded-full hover:bg-sky-500 transition duration-300" aria-label="X">
+  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M14.67 12.59L22.47 3h-2.17l-6.77 8.1L8.1 3H1.5l8.32 11.9L1.5 21h2.17l7.15-8.53L15.9 21h6.6l-7.83-10.41z"/>
+  </svg>
+</a>
+
+
+  <!-- Email -->
+<a href="mailto:nagendrahanchinale19@gmail.com" class="bg-[#28282b] p-2 rounded-full hover:bg-blue-400 transition duration-300" aria-label="Email">
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 4h16v16H4z"/>
+    <polyline points="22,6 12,13 2,6"/>
+  </svg>
+</a>
+
+
+  <!-- GitHub -->
+  <a href="https://github.com/NagendraHanchinale" target="_blank" class="bg-[#28282b] p-2 rounded-full hover:bg-gray-700 transition duration-300" aria-label="GitHub">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+      <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.71-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.6.07-.6 1.01.07 1.54 1.04 1.54 1.04.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.93 0-1.09.39-1.98 1.03-2.68-.1-.26-.45-1.28.1-2.67 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85.004 1.7.115 2.5.337 1.9-1.29 2.75-1.02 2.75-1.02.55 1.39.2 2.41.1 2.67.64.7 1.03 1.59 1.03 2.68 0 3.83-2.34 4.68-4.57 4.92.36.31.68.93.68 1.88 0 1.36-.01 2.46-.01 2.79 0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z" clip-rule="evenodd"/>
+    </svg>
+  </a>
+</div>
+  </div>
+</div>
+
+
+      <!-- Right Content - Projects -->
+<!-- Peak-Hour Demand Management Section -->
+<div class="w-full lg:w-2/3 xl:w-3/4 mx-auto px-4" id="business-case">
+  <div class="flex flex-col gap-6 bg-[#1e1e1e]/60 backdrop-blur-lg p-6 rounded-3xl border border-gray-700 shadow-lg text-gray-200">
+    
+    <!-- Section Header -->
+    <h2 class="text-3xl font-bold text-yellow-400 mb-4">📈 Peak-Hour Demand Management</h2>
+    
+    <!-- Description -->
+    <p class="text-base text-gray-300">
+      Balancing rider requests and driver supply during high-demand scenarios—such as rush hours, concerts, or festivals—is critical to ensure seamless user experience. By applying <span class="text-yellow-300 font-medium">queuing theory</span> and <span class="text-yellow-300 font-medium">multi-level load balancing</span>, large-scale mobility platforms can maintain responsiveness and service reliability under pressure.
+    </p>
+
+    <!-- Core Problem -->
+    <div class="mt-4 bg-[#141414] border border-gray-700 p-4 rounded-xl">
+      <h3 class="text-lg font-semibold text-purple-400 mb-2">🚧 Core Problem</h3>
+      <p class="text-sm text-gray-300">
+        Challenge: Handle <strong>5–10×</strong> the normal request volume during peak hours while:
+      </p>
+      <ul class="list-disc pl-5 text-sm text-gray-300 mt-2 space-y-1">
+        <li>Preventing server overload</li>
+        <li>Minimizing rider wait times</li>
+        <li>Avoiding driver burnout</li>
+      </ul>
+
+      <p class="text-sm text-gray-300 mt-3">Key system constraints include:</p>
+      <ul class="list-disc pl-5 text-sm text-gray-300 mt-2 space-y-1">
+        <li><strong>99.9%</strong> request success rate</li>
+        <li><strong>&lt;100ms</strong> latency for critical paths</li>
+        <li>Elastic real-time scaling across services</li>
+      </ul>
+    </div>
+
+    <div class="mt-6 flex flex-col justify-center items-center">
+      <p class="text-lg italic text-gray-400 mb-2"> <span class="font-bold">Workflow Integration</p>
+      <div class="flex justify-center items-center">
+        <img src="../images/case/f6_fig3.png" alt="Load Balancing Flowchart" class="w-full max-w-2xl rounded-xl border border-gray-600 shadow-md">
+      </div>
+    </div>
+
+    <!-- Key Approach -->
+
+      <h3 class="text-xl font-semibold text-yellow-400 mt-6">1. Multi-Layered Load Balancing</h3>
+      <p class="text-sm text-gray-300">
+        To ensure system resiliency under heavy traffic, requests are distributed across hierarchical balancing layers:
+      </p>
+      <ul class="list-disc pl-5 text-sm text-gray-300 space-y-1">
+        <li><strong>Global Load Balancer</strong>: Allocates traffic to nearest or most available region.</li>
+        <li><strong>Regional Load Balancer</strong>: Routes requests to zonal microservices based on demand-supply ratios.</li>
+        <li><strong>Service Clusters</strong>: Handle rider-driver matchmaking and ETA computation.</li>
+      </ul>
+
+
+    <!-- Flowchart -->
+    <div class="mt-6 flex flex-col justify-center items-center">
+      <p class="text-lg italic text-gray-400 mb-2"> <span class="font-bold">Idea: </span>Distribute requests across hierarchical layers to prevent bottlenecks.</p>
+      <div class="flex justify-center items-center">
+        <img src="../images/case/f6_fig1.png" alt="Load Balancing Flowchart" class="w-full max-w-2xl rounded-xl border border-gray-600 shadow-md">
+      </div>
+    </div>
+
+
+    <!-- Summary -->
+    <div class="">
+      <h4 class="text-lg font-semibold text-purple-400 mb-2">📌 Key Insight</h4>
+      <p class="text-sm text-gray-300">
+        Effective demand management requires more than just hardware—it demands intelligent distribution strategies backed by queuing models and real-time feedback loops to maintain low latency and high availability at scale.
+      </p>
+    </div>
+
+   <h3 class="text-xl font-semibold text-yellow-400 mt-6">2. Queuing Theory Optimization</h3>
+<p>
+    <strong>Model:</strong> The driver assignment process can be modeled as an <em>M/M/c</em> queuing system, which assumes:
+</p>
+<ul class="list-disc list-inside ml-4 mt-2 text-gray-300">
+    <li><strong>Arrival Rate (λ):</strong> Average number of rider requests per minute.</li>
+    <li><strong>Service Rate (μ):</strong> Average number of drivers who can serve riders per minute.</li>
+    <li><strong>Servers (c):</strong> Number of parallel matching operations or available drivers.</li>
+</ul>
+<p class="mt-2">
+    This model helps optimize system performance by minimizing rider wait times and maximizing driver utilization during peak demand periods.
+</p>
+
+    <div class="mt-6">
+      <div class="flex justify-center items-center">
+        <img src="../images/case/f6_fig2.png" alt="Load Balancing Flowchart" class="w-full max-w-2xl rounded-xl border border-gray-600 shadow-md">
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+
+
+
+
+
+    </div>
+  </div>
+
+</body>
+<script>
+  const toggleBtn = document.getElementById("menuToggle");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  toggleBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+</script>
+
+</html>

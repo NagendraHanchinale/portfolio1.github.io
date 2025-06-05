@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+  <style>
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+
+    .scrollbar-hide {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;     /* Firefox */
+    }
+
+    /* Custom gradient animation */
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .animated-gradient {
+      background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+      background-size: 400% 400%;
+      animation: gradient-shift 15s ease infinite;
+    }
+
+    /* Enhanced Project Card Styles */
+    .project-card {
+      position: relative;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(139, 69, 19, 0.1), rgba(255, 105, 180, 0.1), rgba(30, 144, 255, 0.1));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .project-card:hover {
+      transform: translateY(-12px) scale(1.02);
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(139, 69, 19, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    /* Enhanced glass morphism */
+    .glass-enhanced {
+      backdrop-filter: blur(20px) saturate(200%);
+      -webkit-backdrop-filter: blur(20px) saturate(200%);
+      background: rgba(30, 30, 30, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Project image hover effects */
+    .project-image {
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(255,255,255,0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .project-card:hover .project-image::after {
+      opacity: 1;
+    }
+
+    .project-card:hover .project-image img {
+      transform: scale(1.1);
+    }
+
+    /* Enhanced text animations */
+    .project-title {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #8b4513, #ff69b4, #1e90ff);
+      transition: width 0.3s ease;
+    }
+
+    .project-card:hover .project-title::after {
+      width: 100%;
+    }
+
+    /* Floating animation for cards */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .project-card:nth-child(1) {
+      animation: float 6s ease-in-out infinite;
+      animation-delay: 0s;
+    }
+
+    .project-card:nth-child(2) {
+      animation: float 6s ease-in-out infinite;
+      animation-delay: 2s;
+    }
+
+    .project-card:nth-child(3) {
+      animation: float 6s ease-in-out infinite;
+      animation-delay: 4s;
+    }
+
+    /* Enhanced section header */
+    .section-header {
+      position: relative;
+      margin-bottom: 3rem;
+    }
+
+    .section-header::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(139, 69, 19, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: -1;
+    }
+
+    /* Glowing text effect for main title */
+    .glow-text {
+      text-shadow: 
+        0 0 5px rgba(139, 69, 19, 0.5),
+        0 0 10px rgba(255, 105, 180, 0.3),
+        0 0 15px rgba(30, 144, 255, 0.2);
+    }
+
+    /* Enhanced project grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      perspective: 1000px;
+    }
+
+    /* Glass morphism effect */
+    .glass {
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      background-color: rgba(30, 30, 30, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.125);
+    }
+
+    /* Enhanced project description */
+    .project-description {
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+
+    .project-card:hover .project-description {
+      opacity: 1;
+    }
+
+    /* Improved responsive design */
+    @media (max-width: 768px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .project-card:hover {
+        transform: translateY(-8px) scale(1.01);
+      }
+    }
+
+  </style>
+</head>
+<body class="bg-[#111112] text-white min-h-screen scrollbar-hide">
+
+  <!-- Header -->
+<header class="sticky top-0 z-50 w-full py-4 px-4 md:px-8 flex items-center justify-between shadow-2xl rounded-md bg-[#1e1e1e]/50 backdrop-blur-md backdrop-saturate-150">
+
+  <!-- Logo Section -->
+  <div class="flex items-center rounded-md">
+    <img src="../profile.png" alt="Logo" class="w-10 h-8 rounded-full mr-4" />
+    <h1 class="text-xl md:text-2xl font-semibold text-white">Ride Handling Portfolio</h1>
+  </div>
+
+  <!-- Desktop Navigation -->
+  <nav class="hidden md:flex gap-6 text-white font-medium mr-[300px]">
+    <a href="../index.html#functionalities" class="hover:text-purple-400 transition">Home</a>
+    <a href="../Pages/Project1.html" class="hover:text-purple-400 transition">Projects</a>
+    <a href="../Pages/About.html" class="hover:text-purple-400 transition">About</a>
+    <a href="../Pages/Resume.html" class="hover:text-purple-400 transition">Resume</a>
+    <a href="../Pages/Contact.html" class="hover:text-purple-400 transition">Contact</a>
+  </nav>
+
+  <!-- Mobile Menu Button -->
+  <div class="md:hidden relative">
+    <button id="menuToggle" class="p-2 rounded-lg bg-[#2c2c31] hover:bg-[#3c3c41] transition-colors">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobileMenu" class="hidden absolute right-0 mt-2 w-48 bg-[#2c2c31] text-white rounded-lg shadow-lg py-2 z-50">
+      <a href="../index.html#functionalities" class="block px-4 py-2 hover:bg-[#3c3c41]">Home</a>
+      <a href="../Pages/Project1.html" class="block px-4 py-2 hover:bg-[#3c3c41]">Projects</a>
+      <a href="../Pages/About.html" class="block px-4 py-2 hover:bg-[#3c3c41]">About</a>
+      <a href="../Pages/Resume.html" class="block px-4 py-2 hover:bg-[#3c3c41]">Resume</a>
+      <a href="../Pages/Contact.html" class="block px-4 py-2 hover:bg-[#3c3c41]">Contact</a>
+      
+    </div>
+  </div>
+</header>
+
+
+  <!-- Main Container -->
+  <div class="container mx-auto px-4 py-8 max-w-7xl bg-[#111112] scrollbar-hide">
+    <div class="flex flex-col lg:flex-row gap-8 scrollbar-hide">
+
+      <!-- Left Sidebar - Profile -->
+<div class="md:w-[300px] w-[90%] bg-[#1e1e1e] text-white p-6 rounded-2xl shadow-xl mx-auto relative border border-gray-700 backdrop-blur-md md:h-[60vh]">
+
+  <!-- Toggle Button for Small Screens -->
+  <!-- <button 
+    @click="open = !open"
+    class="sm:hidden absolute top-2 right-2 z-20 text-white"
+  >
+    <svg :class="{'rotate-180': open}" class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  </button> -->
+
+  <!-- Glowing Background Circle -->
+  <div class="absolute -top-10 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-2xl opacity-20 z-0"></div>
+
+  <!-- Card Content -->
+  <div x-show="open" x-transition class="relative z-10 mt-4 sm:mt-0">
+    <div class="relative w-28 h-28 mx-auto">
+      <img src="../profile.png" alt="Profile" class="w-full h-full rounded-full border-4 border-gray-500 shadow-lg ring-4 ring-[#313135]" />
+    </div>
+
+    <h2 class="text-2xl font-bold mt-4 tracking-wide text-center">Nagendra B Hanchinale</h2>
+    <p class="text-sm italic text-gray-400 text-center mt-1">"Code like art, build like an architect."</p>
+
+    <div class="mt-6 space-y-3 text-sm text-gray-300 text-center">
+      <p class="flex justify-center items-center gap-2 text-gray-400">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 21C12 21 5 13.5 5 8.5A7 7 0 0 1 19 8.5c0 5-7 12.5-7 12.5z"></path>
+          <circle cx="12" cy="8.5" r="2.5" fill="currentColor"></circle>
+        </svg>
+        Hubli, India
+      </p>
+    </div>
+
+<div class="mt-6 flex justify-center gap-4">
+  <!-- LinkedIn -->
+  <a href="https://www.linkedin.com/in/nagendra-hanchinale-663291258/" target="_blank" class="bg-[#28282b] p-2 rounded-full hover:bg-blue-600 transition duration-300" aria-label="LinkedIn">
+    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.48 8.2H4.5V24H.48V8.2zM8.75 8.2H12.5v2.3h.05c.52-.98 1.8-2 3.7-2 3.96 0 4.7 2.6 4.7 6V24h-4.02v-7.7c0-1.9-.03-4.3-2.65-4.3-2.65 0-3.05 2.07-3.05 4.2V24H8.75V8.2z"/>
+    </svg>
+  </a>
+
+  <!-- Twitter -->
+<a href="https://x.com/NHanchinale" target="_blank" class="bg-[#28282b] p-2 rounded-full hover:bg-sky-500 transition duration-300" aria-label="X">
+  <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M14.67 12.59L22.47 3h-2.17l-6.77 8.1L8.1 3H1.5l8.32 11.9L1.5 21h2.17l7.15-8.53L15.9 21h6.6l-7.83-10.41z"/>
+  </svg>
+</a>
+
+
+  <!-- Email -->
+<a href="mailto:nagendrahanchinale19@gmail.com" class="bg-[#28282b] p-2 rounded-full hover:bg-blue-400 transition duration-300" aria-label="Email">
+  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 4h16v16H4z"/>
+    <polyline points="22,6 12,13 2,6"/>
+  </svg>
+</a>
+
+
+  <!-- GitHub -->
+  <a href="https://github.com/NagendraHanchinale" target="_blank" class="bg-[#28282b] p-2 rounded-full hover:bg-gray-700 transition duration-300" aria-label="GitHub">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+      <path fill-rule="evenodd" d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.71-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.6.07-.6 1.01.07 1.54 1.04 1.54 1.04.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.93 0-1.09.39-1.98 1.03-2.68-.1-.26-.45-1.28.1-2.67 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85.004 1.7.115 2.5.337 1.9-1.29 2.75-1.02 2.75-1.02.55 1.39.2 2.41.1 2.67.64.7 1.03 1.59 1.03 2.68 0 3.83-2.34 4.68-4.57 4.92.36.31.68.93.68 1.88 0 1.36-.01 2.46-.01 2.79 0 .27.18.58.69.48A10.01 10.01 0 0022 12c0-5.52-4.48-10-10-10z" clip-rule="evenodd"/>
+    </svg>
+  </a>
+</div>
+  </div>
+</div>
+
+
+      <!-- Right Content - Projects -->
+<div class="w-full lg:w-2/3 xl:w-3/4 mx-auto px-4" id="business-case">
+  <div class="flex flex-col gap-6 bg-[#1e1e1e]/60 backdrop-blur-lg p-6 rounded-3xl border border-gray-700 shadow-lg text-gray-200">
+    <h2 class="text-3xl font-bold text-yellow-400 mb-4">Geospatial Indexing</h2>
+
+    <h3 class="text-2xl font-semibold text-yellow-400">Problem Statement</h3>
+    <p>
+      <span class="font-semibold text-white">Input:</span><br>
+      - 10M+ moving objects represented by (latitude, longitude)<br>
+      - 100K+ queries/second in the form: <i>"Find drivers within 1 km of rider at (lat, lng)"</i>
+    </p>
+
+    <p>
+      <span class="font-semibold text-white">Constraints:</span><br>
+      - 95% of queries must be answered in under 10ms<br>
+      - Dynamic updates every 1–5 seconds<br>
+      - High memory efficiency is required
+    </p>
+
+   <h3 class="text-xl font-semibold text-yellow-400 mt-6">1.Quad Trees (Region-Partitioning)</h3>
+   <p>
+     A <a href="https://en.wikipedia.org/wiki/Quadtree" class="text-green-400">Quad Tree</a> is a tree data structure used to divide a 2D space (like a map or an image) into smaller and smaller parts — each time into four equal quadrants (hence the name "quad").
+     <br>
+      <strong>🧠 Idea :</strong> Recursively divide 2D space (e.g., a city map) into four quadrants. <br>
+Each node (region) is subdivided until it contains ≤ k objects, allowing fast spatial queries by pruning irrelevant areas.
+   </p>
+
+    <div class="flex flex-col justify-center items-center">
+        <img src="../images/case/f4_fig1.png" alt="H# Grid Image" loading="lazy" class="w-full">
+        <p class="text-gray-300 text-[0.9em]">Fig.1: Recursive spatial decomposition using a Quad Tree. The entire map is divided into four quadrants (NW, NE, SW, SE). When a quadrant (e.g., NW) exceeds the object capacity threshold, it is further subdivided into four sub-quadrants, enabling efficient region-based queries.</p>
+    </div>
+
+    <!-- code 1 -->
+    <div class="mt-4">
+      <p class="text-lg italic text-gray-400 mb-2">🔧 Code (C++)</p>
+      <div class="relative bg-[#0f0f0f] border border-gray-600 rounded-md overflow-hidden">
+        <div class="absolute top-2 right-2">
+          <button onclick="navigator.clipboard.writeText(document.getElementById('h3-ratio-code').innerText)" class="text-xs text-purple-400 hover:text-white">Copy</button>
+        </div>
+        <pre class="text-sm p-4 overflow-auto" id="h3-ratio-code"><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+struct Point { double x, y; int id; };
+
+struct Quad {
+    // axis-aligned bounding box
+    double xmin, ymin, xmax, ymax;
+    vector<Point> pts;
+    unique_ptr<Quad> nw, ne, sw, se;
+    static constexpr int CAP = 8;               // max points before split
+
+    Quad(double x1,double y1,double x2,double y2):xmin(x1),ymin(y1),xmax(x2),ymax(y2){}
+
+    bool contains(const Point& p) const {
+        return p.x>=xmin && p.x<=xmax && p.y>=ymin && p.y<=ymax;
+    }
+    bool intersects(double x1,double y1,double x2,double y2) const {
+        return !(x2<xmin||x1>xmax||y2<ymin||y1>ymax);
+    }
+    void subdivide() {
+        double mx=(xmin+xmax)/2, my=(ymin+ymax)/2;
+        nw = make_unique<Quad>(xmin,my,  mx,ymax);
+        ne = make_unique<Quad>(mx,  my, xmax,ymax);
+        sw = make_unique<Quad>(xmin,ymin,mx,my );
+        se = make_unique<Quad>(mx,  ymin,xmax,my);
+    }
+    void insert(const Point& p) {
+        if(!contains(p)) return;
+        if(pts.size()<CAP && !nw) { pts.push_back(p); return; }
+        if(!nw) subdivide();
+        nw->insert(p); ne->insert(p); sw->insert(p); se->insert(p);
+    }
+    void query(double x1,double y1,double x2,double y2, vector<int>& out) const {
+        if(!intersects(x1,y1,x2,y2)) return;
+        for(auto &p:pts)
+            if(p.x>=x1&&p.x<=x2&&p.y>=y1&&p.y<=y2) out.push_back(p.id);
+        if(!nw) return;
+        nw->query(x1,y1,x2,y2,out); ne->query(x1,y1,x2,y2,out);
+        sw->query(x1,y1,x2,y2,out); se->query(x1,y1,x2,y2,out);
+    }
+};
+
+</code></pre>
+      </div>
+    </div>
+
+    <div class="bg-[#2a2a2a] p-4 rounded-md border border-gray-600">
+      <p class="mb-2 font-semibold">Usage:</p>
+      <p>
+        Quad root(-180,-90,180,90);<br>
+root.insert({77.1,28.6,42});               // New Delhi <br>
+vector<int> ids;   <br>
+root.query(76,28,78,29,ids);               // rectangle search <br>
+
+      </p>
+    </div>
+
+<h3 class="text-xl font-semibold text-yellow-400 mt-6">2. Geohashing</h3>
+
+<p class="text-gray-300">
+  <strong>Idea:</strong> Geohashing converts 2D geographic coordinates (latitude, longitude) into a 1D alphanumeric string. The longer the string, the higher the precision. The prefix of a geohash represents larger geographic regions, meaning that nearby locations will share common prefixes.
+</p>
+
+<p class="text-gray-300">
+  <strong>Key Properties:</strong>
+  <ul class="list-disc list-inside ">
+    <li><strong>Character length = precision:</strong> More characters imply higher spatial resolution.<br>
+      Example: 
+      <code>ezs42</code> ≈ ~3 km area, 
+      <code>ezs42d</code> ≈ ~0.5 km area.
+    </li>
+    <li><strong>Spatial locality:</strong> Nearby coordinates often have geohashes with the same prefix.</li>
+  </ul>
+</p>
+
+
+    <div class="flex flex-col justify-center items-center">
+        <img src="../images/case/f4_fig2.png" alt="H# Grid Image" loading="lazy" class="w-full">
+    </div>
+
+    <div class="mt-4">
+      <p class="text-lg italic text-gray-400 mb-2">🔧 Code (C++)</p>
+      <div class="relative bg-[#0f0f0f] border border-gray-600 rounded-md overflow-hidden">
+        <div class="absolute top-2 right-2">
+          <button onclick="navigator.clipboard.writeText(document.getElementById('h3-ratio-code').innerText)" class="text-xs text-purple-400 hover:text-white">Copy</button>
+        </div>
+        <pre class="text-sm p-4 overflow-auto" id="h3-ratio-code"><code class="language-cpp">#include &lt;bits/stdc++.h&gt;
+const std::string BASE32 = "0123456789bcdefghjkmnpqrstuvwxyz";
+
+std::string geohash(Point p, int precision=9) {
+    double lat_min = -90.0, lat_max = 90.0;
+    double lon_min = -180.0, lon_max = 180.0;
+    std::string hash;
+    int bits = 0, idx = 0;
+    
+    for (int i = 0; i < precision * 5; i++) {  // 5 bits per char
+        if (i % 2 == 0) {  // Even bit: longitude
+            double mid = (lon_min + lon_max) / 2;
+            if (p.lon >= mid) {
+                idx = idx * 2 + 1;
+                lon_min = mid;
+            } else {
+                idx *= 2;
+                lon_max = mid;
+            }
+        } else {  // Odd bit: latitude
+            double mid = (lat_min + lat_max) / 2;
+            if (p.lat >= mid) {
+                idx = idx * 2 + 1;
+                lat_min = mid;
+            } else {
+                idx *= 2;
+                lat_max = mid;
+            }
+        }
+        bits++;
+        
+        if (bits == 5) {
+            hash += BASE32[idx];
+            bits = 0;
+            idx = 0;
+        }
+    }
+    return hash;
+}
+
+class GeoIndex {
+    std::unordered_map<std::string, std::vector<Point>> index;
+    int precision;
+    
+public:
+    GeoIndex(int prec=6) : precision(prec) {}
+    
+    void insert(Point p) {
+        std::string key = geohash(p, precision).substr(0, precision);
+        index[key].push_back(p);
+    }
+    
+    std::vector<Point> query_nearby(Point center, double radius_km) {
+        std::string center_hash = geohash(center, precision);
+        std::vector<Point> results;
+        
+        // Get neighbor geohashes (simplified)
+        std::vector<std::string> neighbors = {
+            center_hash, 
+            geohash_move(center_hash, 1, 0),  // North
+            geohash_move(center_hash, -1, 0), // South
+            geohash_move(center_hash, 0, 1),  // East
+            geohash_move(center_hash, 0, -1)  // West
+        };
+        
+        for (auto& key : neighbors) {
+            if (index.find(key) != index.end()) {
+                for (auto& p : index[key]) {
+                    // Add if within radius (Haversine distance)
+                    if (haversine(center, p) <= radius_km) 
+                        results.push_back(p);
+                }
+            }
+        }
+        return results;
+    }
+};
+</code></pre>
+      </div>
+    </div>
+
+
+
+<div class="">
+<h3 class="text-xl font-semibold text-white-400 ">Why Uber Uses H3 Instead?</h3>
+
+    <div class="flex flex-col justify-center items-center -mt-4">
+        <img src="../images/case/f4_fig3.avif" alt="H# Grid Image" loading="lazy" class="w-full">
+    </div>
+
+<p class="text-gray-300 mt-1">
+  <strong>1. 🧩 Hexagons Are Better Than Squares:</strong><br>
+  Hexagons have equal distance to neighbors, avoiding distortion and directional bias. They’re more natural for proximity calculations and heatmap-style clustering.
+</p>
+<p class="text-gray-300 mt-1">
+  <strong>2. 📐 Hierarchical Indexing:</strong><br>
+  H3 supports multiple resolutions (zoom levels). Larger hexagons can be subdivided into smaller ones, making it easy to aggregate or drill down spatial data.
+</p>
+<p class="text-gray-300 mt-1">
+  <strong>3. 🌍 Global Uniform Coverage:</strong><br>
+  H3 covers the entire globe, including oceans and borders — ideal for Uber’s international operations.
+</p>
+<p class="text-gray-300 mt-1">
+  <strong>4. 🚦 Fast Spatial Operations:</strong><br>
+  H3 allows quick conversion of (lat, lon) to hex indexes, making neighborhood queries and spatial joins very efficient.
+</p>
+<p class="text-gray-300 mt-1">
+  <strong>5. 💸 Dynamic Pricing (Surge):</strong><br>
+  Demand and supply can be tracked per hex cell, enabling fine-grained surge pricing based on real-time localized rider-driver density.
+</p>
+
+</div>
+
+  </div>
+</div>
+
+
+
+
+
+    </div>
+  </div>
+
+</body>
+<script>
+  const toggleBtn = document.getElementById("menuToggle");
+  const mobileMenu = document.getElementById("mobileMenu");
+
+  toggleBtn.addEventListener("click", () => {
+    mobileMenu.classList.toggle("hidden");
+  });
+</script>
+
+</html>
